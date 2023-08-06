@@ -18,7 +18,6 @@ public class TransferSubmitter {
     }
 
     public void submitTransfers(int numTransfers) {
-        long start = System.currentTimeMillis();
         List<Thread> threads = accounts.stream().map(account -> new Thread(() -> {
             UUID id = UUID.randomUUID();
             for (int i = 0; i < numTransfers; i++) {
@@ -30,12 +29,6 @@ public class TransferSubmitter {
         for (Thread thread : threads) {
             thread.start();
         }
-//
-//        for (Thread thread : threads) {
-//            thread.join();
-//        }
-        System.out.println("Submitting transfers took " + Duration.of(System.currentTimeMillis() - start, ChronoUnit.MILLIS));
-
     }
 
     private UUID getRandomId(UUID id) {

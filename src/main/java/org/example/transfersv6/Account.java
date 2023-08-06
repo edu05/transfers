@@ -14,15 +14,12 @@ public class Account extends Actor<Transfer> {
     private long lastCommit = -1;
 
     public Account() {
-        super(true);
         ACTOR_REPOSITORY.putActor(id, this);
     }
 
     public void process(Transfer transfer) {
         if (id.equals(transfer.to())) {
             amount += transfer.amount();
-//            System.out.println(id + " has " + amount);
-//            System.out.print("-" + Duration.of(System.currentTimeMillis() - startTime(), ChronoUnit.MILLIS) + "-");
             numOfPositiveTxs++;
             long currentTimeMillis = System.currentTimeMillis();
             if (lastCommit < currentTimeMillis) {
@@ -35,15 +32,8 @@ public class Account extends Actor<Transfer> {
             return;
         }
         amount -= transfer.amount();
-        if (amount < 20) {
-            System.out.println("amount less than 20");
-        }
         numOfNegativeTxs++;
         ACTOR_REPOSITORY.getActor(transfer.to()).queue(this.id, transfer);
-        long currentTimeMillis = System.currentTimeMillis();
-        if (lastCommit < currentTimeMillis) {
-            lastCommit = currentTimeMillis;
-        }
     }
 
     @Override

@@ -1,4 +1,6 @@
-package org.example.transfersv6;
+package org.example.transfersv6.didntwork;
+
+import org.example.transfersv6.Transfer;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;

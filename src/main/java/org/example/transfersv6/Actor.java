@@ -1,21 +1,12 @@
 package org.example.transfersv6;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.Queue;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Actor<T> implements Runnable {
 
     public final UUID id = UUID.randomUUID();
     private long startTime = 0;
     private final MySimpleQueueV6<T> messageQueue = new MySimpleQueueV6<>();
-    private final boolean report;
-
-    protected Actor(boolean report) {
-        this.report = report;
-    }
 
     public void queue(UUID senderId, T message) {
         messageQueue.add(senderId, message);
@@ -32,20 +23,19 @@ public abstract class Actor<T> implements Runnable {
                 count = 0;
                 stopCountingUntilNewMessageHasArrived = false;
             } else {
-                if (report) {
-                    if (count == 100_000) {
-                        System.out.println(state());
-                        stopCountingUntilNewMessageHasArrived = true;
-                        count = 100_001;
-                    } else {
-                        if (!stopCountingUntilNewMessageHasArrived) {
-                            count++;
-                        }
+                if (count == 100_000) {
+                    System.out.println(state());
+                    stopCountingUntilNewMessageHasArrived = true;
+                    count = 100_001;
+                } else {
+                    if (!stopCountingUntilNewMessageHasArrived) {
+                        count++;
                     }
                 }
             }
         }
     }
+
     abstract void process(T message);
 
     abstract String state();
@@ -54,7 +44,6 @@ public abstract class Actor<T> implements Runnable {
         startTime = System.currentTimeMillis();
         new Thread(this).start();
     }
-
     public long startTime() {
         return startTime;
     }

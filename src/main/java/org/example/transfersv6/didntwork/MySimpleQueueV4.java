@@ -1,11 +1,13 @@
-package org.example.transfersv6;
+package org.example.transfersv6.didntwork;
 
+import org.example.transfersv6.Transfer;
+
+import java.util.LinkedList;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class MySimpleQueueV3 {
+public class MySimpleQueueV4 {
 
-    private final SenderAndQueueV2[] transfers = new SenderAndQueueV2[100];
+    private final SenderAndQueue[] transfers = new SenderAndQueue[100];
     private int index = 0;
 
     public void add(UUID senderId, Transfer transfer) {
@@ -15,7 +17,7 @@ public class MySimpleQueueV3 {
                 return;
             }
         }
-        SenderAndQueueV2 senderAndQueue = new SenderAndQueueV2(senderId, new MyQ());
+        SenderAndQueue senderAndQueue = new SenderAndQueue(senderId, new LinkedList<>());
         transfers[index] = senderAndQueue;
         senderAndQueue.queue().add(transfer);
         index++;

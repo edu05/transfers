@@ -1,6 +1,5 @@
 package org.example.transfersv6;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,9 +19,5 @@ public class ActorRepository {
 
     public void putActor(UUID id, Actor actor) {
         actors.put(id, actor);
-    }
-
-    public Collection<Actor> getActors() {
-        return actors.values();
     }
 }

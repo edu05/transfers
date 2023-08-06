@@ -4,10 +4,6 @@ public class TransferRejectionProcessor extends Actor<Transfer> {
 
     private int rejectedTransfers = 0;
 
-    public TransferRejectionProcessor() {
-        super(true);
-    }
-
     @Override
     protected void process(Transfer message) {
         rejectedTransfers++;
