@@ -14,7 +14,6 @@ public class Main {
 
         Thread.sleep(3000);
         ActorRepository.TRANSFER_REJECTION_PROCESSOR.start();
-        ActorRepository.TRANSFER_COMMITTED_PROCESSOR.start();
         for (Account account : accounts) {
             account.start();
         }

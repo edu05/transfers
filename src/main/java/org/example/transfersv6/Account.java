@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
-import static org.example.transfersv6.ActorRepository.TRANSFER_COMMITTED_PROCESSOR;
 import static org.example.transfersv6.ActorRepository.TRANSFER_REJECTION_PROCESSOR;
 
 public class Account extends Actor<Transfer> {
@@ -24,7 +23,6 @@ public class Account extends Actor<Transfer> {
             amount += transfer.amount();
 //            System.out.println(id + " has " + amount);
 //            System.out.print("-" + Duration.of(System.currentTimeMillis() - startTime(), ChronoUnit.MILLIS) + "-");
-            TRANSFER_COMMITTED_PROCESSOR.queue(id, new TransferCommitted(transfer, System.currentTimeMillis()));
             numOfPositiveTxs++;
             long currentTimeMillis = System.currentTimeMillis();
             if (lastCommit < currentTimeMillis) {
