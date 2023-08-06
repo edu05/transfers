@@ -1,0 +1,6 @@
+package org.example.transfersv4.messages.transferprocessor;
+
+import java.util.UUID;
+
+public record TransferLegRejected(UUID id) {
+}
