@@ -17,13 +17,13 @@ public class TransferSubmitter {
         this.accountIds = accounts.stream().map(a -> a.id).collect(Collectors.toList());
     }
 
-    public void submitTransfers(int numTransfers) throws InterruptedException {
+    public void submitTransfers(int numTransfers) {
         long start = System.currentTimeMillis();
         List<Thread> threads = accounts.stream().map(account -> new Thread(() -> {
             UUID id = UUID.randomUUID();
             for (int i = 0; i < numTransfers; i++) {
                 UUID anotherAccountId = getRandomId(account.id);
-                account.queue(id, new Transfer(UUID.randomUUID(), account.id, anotherAccountId, 3));
+                account.queue(id, new Transfer(account.id, anotherAccountId, 3));
             }
         })).collect(Collectors.toList());
 
