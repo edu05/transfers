@@ -7,6 +7,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static org.example.transfersv6.TransferRepository.TRANSFER_REPOSITORY;
+
 public class TransferSubmitter {
 
     private final List<Account> accounts;
@@ -22,7 +24,7 @@ public class TransferSubmitter {
             UUID id = UUID.randomUUID();
             for (int i = 0; i < numTransfers; i++) {
                 UUID anotherAccountId = getRandomId(account.id);
-                account.queue(id, new Transfer(account.id, anotherAccountId, 3));
+                account.queue(id, TRANSFER_REPOSITORY.create(account.id, anotherAccountId, 3));
             }
         })).collect(Collectors.toList());
 

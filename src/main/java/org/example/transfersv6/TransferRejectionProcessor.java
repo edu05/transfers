@@ -7,6 +7,7 @@ public class TransferRejectionProcessor extends Actor<Transfer> {
     @Override
     protected void process(Transfer message) {
         rejectedTransfers++;
+        TransferRepository.TRANSFER_REPOSITORY.recycle(message);
         if (rejectedTransfers % 500 == 0) {
             throw new RuntimeException();
         }

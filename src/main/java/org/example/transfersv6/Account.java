@@ -18,22 +18,23 @@ public class Account extends Actor<Transfer> {
     }
 
     public void process(Transfer transfer) {
-        if (id.equals(transfer.to())) {
-            amount += transfer.amount();
+        if (id.equals(transfer.to)) {
+            amount += transfer.amount;
             numOfPositiveTxs++;
             long currentTimeMillis = System.currentTimeMillis();
             if (lastCommit < currentTimeMillis) {
                 lastCommit = currentTimeMillis;
             }
+            TransferRepository.TRANSFER_REPOSITORY.recycle(transfer);
             return;
         }
-        if (amount - transfer.amount() < 0) {
+        if (amount - transfer.amount < 0) {
             TRANSFER_REJECTION_PROCESSOR.queue(this.id, transfer);
             return;
         }
-        amount -= transfer.amount();
+        amount -= transfer.amount;
         numOfNegativeTxs++;
-        ACTOR_REPOSITORY.getActor(transfer.to()).queue(this.id, transfer);
+        ACTOR_REPOSITORY.getActor(transfer.to).queue(this.id, transfer);
     }
 
     @Override
