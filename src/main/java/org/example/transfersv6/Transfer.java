@@ -8,9 +8,9 @@ public class Transfer {
     public UUID to;
     public int amount;
 
-    public Transfer(UUID from, UUID uuid, int amount) {
+    public Transfer(UUID from, UUID to, int amount) {
         this.from = from;
-        this.to = uuid;
+        this.to = to;
         this.amount = amount;
     }
 }

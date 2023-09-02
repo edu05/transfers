@@ -1,22 +1,33 @@
 package org.example.transfersv6;
 
-import org.example.transfersv6.didntwork.MySimpleQueueV4;
-import org.example.transfersv6.didntwork.MySimpleQueueV42;
-import org.example.transfersv6.didntwork.MySimpleQueueV5;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
+import static org.example.transfersv6.Utils.executeOnThread;
+import static org.example.transfersv6.Utils.freeThread;
+
 public abstract class Actor<T> implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Actor.class);
 
     public final UUID id = UUID.randomUUID();
     private long startTime = 0;
     private final MySimpleQueueV6<T> messageQueue = new MySimpleQueueV6<>();
+    private static final int FINISHED = 50_000;
 
-    public void queue(UUID senderId, T message) {
-        messageQueue.add(senderId, message);
+    public Actor() {
+        ACTOR_REPOSITORY.putActor(id, this);
+    }
+
+    public void queue(T message) {
+        messageQueue.add(message);
     }
 
     @Override
@@ -29,11 +40,15 @@ public abstract class Actor<T> implements Runnable {
                 process(nextMessage);
                 count = 0;
                 stopCountingUntilNewMessageHasArrived = false;
+                if (Math.random() > 0.999) {
+                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
+                }
             } else {
-                if (count == 100_000) {
-                    System.out.println(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime(), ChronoUnit.MILLIS));
+                freeThread();
+                if (count == FINISHED) {
+                    LOGGER.info("aaa " + state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
                     stopCountingUntilNewMessageHasArrived = true;
-                    count = 100_001;
+                    count = FINISHED + 1;
                 } else {
                     if (!stopCountingUntilNewMessageHasArrived) {
                         count++;
@@ -49,9 +64,6 @@ public abstract class Actor<T> implements Runnable {
 
     public void start() {
         startTime = System.currentTimeMillis();
-        new Thread(this).start();
-    }
-    public long startTime() {
-        return startTime;
+        executeOnThread(this);
     }
 }
