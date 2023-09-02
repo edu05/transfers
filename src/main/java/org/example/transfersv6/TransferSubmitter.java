@@ -1,7 +1,5 @@
 package org.example.transfersv6;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,22 +18,25 @@ public class TransferSubmitter {
     }
 
     public void submitTransfers(int numTransfers) {
-        List<Thread> threads = accounts.stream().map(account -> new Thread(() -> {
+        List<Runnable> runnables = accounts.stream().map(account -> (Runnable) () -> {
             UUID id = UUID.randomUUID();
+            ThreadLocalRandom current = ThreadLocalRandom.current();
             for (int i = 0; i < numTransfers; i++) {
-                UUID anotherAccountId = getRandomId(account.id);
-                account.queue(id, TRANSFER_REPOSITORY.create(account.id, anotherAccountId, 3));
+                UUID anotherAccountId = getRandomId(account.id, current);
+                account.queue(id, new Transfer(account.id, anotherAccountId, 3));
             }
-        })).collect(Collectors.toList());
+        }).collect(Collectors.toList());
 
-        for (Thread thread : threads) {
-            thread.start();
+
+
+        for (Runnable runnable : runnables) {
+            new Thread(runnable).start();
         }
     }
 
-    private UUID getRandomId(UUID id) {
+    private UUID getRandomId(UUID id, ThreadLocalRandom current) {
         while (true) {
-            int next = ThreadLocalRandom.current().nextInt(0, accountIds.size());
+            int next = current.nextInt(0, accountIds.size());
             UUID nextId = accountIds.get(next);
             if (!nextId.equals(id)) {
                 return nextId;

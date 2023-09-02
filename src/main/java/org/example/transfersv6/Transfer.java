@@ -10,7 +10,7 @@ public class Transfer {
 
     public Transfer(UUID from, UUID uuid, int amount) {
         this.from = from;
-        to = uuid;
+        this.to = uuid;
         this.amount = amount;
     }
 }

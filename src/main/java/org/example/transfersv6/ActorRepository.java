@@ -1,12 +1,12 @@
 package org.example.transfersv6;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ActorRepository {
 
-    private final Map<UUID, Actor> actors = new HashMap<>();
+    private final Map<UUID, Actor> actors = new ConcurrentHashMap<>();
     public static final TransferRejectionProcessor TRANSFER_REJECTION_PROCESSOR = new TransferRejectionProcessor();
     public static final ActorRepository ACTOR_REPOSITORY = new ActorRepository();
 

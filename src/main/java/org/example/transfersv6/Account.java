@@ -1,6 +1,7 @@
 package org.example.transfersv6;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
@@ -21,11 +22,10 @@ public class Account extends Actor<Transfer> {
         if (id.equals(transfer.to)) {
             amount += transfer.amount;
             numOfPositiveTxs++;
-            long currentTimeMillis = System.currentTimeMillis();
-            if (lastCommit < currentTimeMillis) {
-                lastCommit = currentTimeMillis;
-            }
-            TransferRepository.TRANSFER_REPOSITORY.recycle(transfer);
+//            long currentTimeMillis = Instant.now().toEpochMilli();
+//            if (lastCommit < currentTimeMillis) {
+//                lastCommit = currentTimeMillis;
+//            }
             return;
         }
         if (amount - transfer.amount < 0) {
@@ -34,7 +34,8 @@ public class Account extends Actor<Transfer> {
         }
         amount -= transfer.amount;
         numOfNegativeTxs++;
-        ACTOR_REPOSITORY.getActor(transfer.to).queue(this.id, transfer);
+        Actor actor = ACTOR_REPOSITORY.getActor(transfer.to);
+        actor.queue(this.id, transfer);
     }
 
     @Override

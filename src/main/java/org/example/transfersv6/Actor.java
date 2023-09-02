@@ -1,5 +1,12 @@
 package org.example.transfersv6;
 
+import org.example.transfersv6.didntwork.MySimpleQueueV4;
+import org.example.transfersv6.didntwork.MySimpleQueueV42;
+import org.example.transfersv6.didntwork.MySimpleQueueV5;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public abstract class Actor<T> implements Runnable {
@@ -24,7 +31,7 @@ public abstract class Actor<T> implements Runnable {
                 stopCountingUntilNewMessageHasArrived = false;
             } else {
                 if (count == 100_000) {
-                    System.out.println(state());
+                    System.out.println(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime(), ChronoUnit.MILLIS));
                     stopCountingUntilNewMessageHasArrived = true;
                     count = 100_001;
                 } else {
