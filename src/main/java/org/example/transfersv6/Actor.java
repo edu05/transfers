@@ -37,29 +37,26 @@ public abstract class Actor<T> implements Runnable {
 
     @Override
     public final void run() {
-        int count = 0;
-        boolean stopCountingUntilNewMessageHasArrived = false;
+        int passesWithoutUpdate = 0;
         while (true) {
             T nextMessage = messageQueue.poll();
             if (nextMessage != null) {
                 process(nextMessage);
-                count = 0;
-                stopCountingUntilNewMessageHasArrived = false;
+                passesWithoutUpdate = 0;
                 if (Math.random() > 0.999) {
-//                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
+                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
                 }
             } else {
-                freeThread();
-                if (count == FINISHED) {
+                if (passesWithoutUpdate == FINISHED) {
                     freeThread(500);
-                    LOGGER.info("aaa " + state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
-                    stopCountingUntilNewMessageHasArrived = true;
-                    count = FINISHED + 1;
-                } else {
-                    if (!stopCountingUntilNewMessageHasArrived) {
-                        count++;
-                    }
+                    continue;
                 }
+                passesWithoutUpdate++;
+
+                if (passesWithoutUpdate == FINISHED) {
+                    LOGGER.info("aaa " + state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
+                }
+                freeThread();
             }
         }
     }
