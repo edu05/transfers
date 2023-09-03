@@ -46,6 +46,7 @@ public abstract class Actor<T> implements Runnable {
             } else {
                 freeThread();
                 if (count == FINISHED) {
+                    freeThread(500);
                     LOGGER.info("aaa " + state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
                     stopCountingUntilNewMessageHasArrived = true;
                     count = FINISHED + 1;
