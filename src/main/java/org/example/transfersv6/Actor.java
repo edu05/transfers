@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
 import static org.example.transfersv6.Utils.executeOnThread;
@@ -19,7 +20,7 @@ public abstract class Actor<T> implements Runnable {
 
     public final UUID id = UUID.randomUUID();
     private long startTime = 0;
-    private final MySimpleQueueV6<T> messageQueue = new MySimpleQueueV6<>();
+    private final ConcurrentLinkedQueue<T> messageQueue = new ConcurrentLinkedQueue<>();
     private static final int FINISHED = 50_000;
 
     public Actor() {
