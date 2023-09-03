@@ -1,7 +1,7 @@
 package org.example.transfersv6;
 
 import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
-import static org.example.transfersv6.ActorRepository.TRANSFER_REJECTION_PROCESSOR;
+import static org.example.transfersv6.TransferRejectionProcessor.TRANSFER_REJECTION_PROCESSOR;
 
 public class Account extends Actor<Transfer> {
 

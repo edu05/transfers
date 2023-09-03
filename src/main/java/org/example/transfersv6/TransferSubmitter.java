@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
 import static org.example.transfersv6.Utils.executeOnThread;
@@ -16,17 +15,13 @@ public class TransferSubmitter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransferSubmitter.class);
 
-    private final List<Account> accounts;
     private final List<UUID> accountIds;
 
-    public TransferSubmitter(List<Account> accounts) {
-        this.accounts = accounts;
-        this.accountIds = accounts.stream().map(a -> a.id).collect(Collectors.toList());
+    public TransferSubmitter(List<UUID> accountIds) {
+        this.accountIds = accountIds;
     }
 
     public void submitTransfers(int numTransfersTotal, int numberOfSenders) {
-        accounts.forEach(Actor::start);
-
         int numTransfersPerSender = numTransfersTotal / numberOfSenders;
         int pauseInterval = numTransfersPerSender / 5;
 

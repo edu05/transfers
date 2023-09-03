@@ -25,6 +25,8 @@ public abstract class Actor<T> implements Runnable {
 
     public Actor() {
         ACTOR_REPOSITORY.putActor(id, this);
+        startTime = System.currentTimeMillis();
+        executeOnThread(this);
     }
 
     public void queue(T message) {
@@ -42,7 +44,7 @@ public abstract class Actor<T> implements Runnable {
                 count = 0;
                 stopCountingUntilNewMessageHasArrived = false;
                 if (Math.random() > 0.999) {
-                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
+//                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
                 }
             } else {
                 freeThread();
@@ -63,9 +65,4 @@ public abstract class Actor<T> implements Runnable {
     abstract void process(T message);
 
     abstract String state();
-
-    public void start() {
-        startTime = System.currentTimeMillis();
-        executeOnThread(this);
-    }
 }
