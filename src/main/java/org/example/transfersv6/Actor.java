@@ -18,7 +18,7 @@ import static org.example.transfersv6.Utils.freeThread;
 public abstract class Actor<T> implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Actor.class);
-    private static final int FINISHED = 50_000;
+    private static final int FINISHED = 1_000;
     private static final Map<UUID, ConcurrentLinkedQueue> INBOXES = new ConcurrentHashMap<>();
 
     public final UUID id = UUID.randomUUID();
