@@ -1,0 +1,4 @@
+use kafka or message bus to verify all goes well
+see if can improve memory (ideally the recycling objects trick)
+see if can use special 1 reader n writers inbox
+do records improve anything?

@@ -9,18 +9,18 @@ public class Account extends Actor<Transfer> {
     private int numOfPositiveTxs = 0;
 
     public void process(Transfer transfer) {
-        if (id.equals(transfer.to)) {
-            amount += transfer.amount;
+        if (id.equals(transfer.to())) {
+            amount += transfer.amount();
             numOfPositiveTxs++;
             return;
         }
-        if (amount - transfer.amount < 0) {
+        if (amount - transfer.amount() < 0) {
             send(TRANSFER_REJECTION_PROCESSOR.id, transfer);
             return;
         }
-        amount -= transfer.amount;
+        amount -= transfer.amount();
         numOfNegativeTxs++;
-        send(transfer.to, transfer);
+        send(transfer.to(), transfer);
     }
 
     @Override
