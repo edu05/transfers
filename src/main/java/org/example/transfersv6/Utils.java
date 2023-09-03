@@ -12,6 +12,14 @@ public class Utils {
         }
     }
 
+    public static void freeThread(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void executeOnThread(Runnable runnable) {
         if (VIRTUAL_THREADS_ENABLED) {
             Thread.ofVirtual().start(runnable);

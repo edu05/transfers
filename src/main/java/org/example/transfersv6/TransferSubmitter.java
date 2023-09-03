@@ -35,7 +35,7 @@ public class TransferSubmitter {
                 ThreadLocalRandom current2 = ThreadLocalRandom.current();
                 for (int j = 0; j < numTransfersPerSender; j++) {
                     if (j % pauseInterval == 0) {
-                        freeThread();
+                        freeThread(500);
                     }
                     UUID from = getRandomId(current2);
                     UUID to = getRandomId(from, current2);
