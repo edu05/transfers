@@ -4,6 +4,7 @@ public class Utils {
 
     public static final String TRANSFERS_TOPIC = "transfers2";
     private static final boolean VIRTUAL_THREADS_ENABLED = true;
+    private static final boolean SINGLE_CONSUMER_MULTI_PRODUCER_INBOX_ENABLED = true;
 
     public static void freeThread() {
         try {
@@ -35,5 +36,13 @@ public class Utils {
 
     public static void executeOnNormalThread(String name, Runnable runnable) {
         new Thread(runnable, name).start();
+    }
+
+    public static <E> Inbox<E> createInbox() {
+        if (SINGLE_CONSUMER_MULTI_PRODUCER_INBOX_ENABLED) {
+            return new NodeQueue<>();
+        } else {
+            return new ConcurrentLinkedQueueWrapper<>();
+        }
     }
 }

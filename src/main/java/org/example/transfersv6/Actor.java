@@ -9,8 +9,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static org.example.transfersv6.Utils.createInbox;
 import static org.example.transfersv6.Utils.executeOnThread;
 import static org.example.transfersv6.Utils.freeThread;
 
@@ -18,15 +18,15 @@ public abstract class Actor<T> implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Actor.class);
     private static final int FINISHED = 1_000;
-    private static final Map<String, ConcurrentLinkedQueue> INBOXES = new ConcurrentHashMap<>();
+    private static final Map<String, Inbox> INBOXES = new ConcurrentHashMap<>();
 
     public final String id;
     private final long startTime;
-    private final ConcurrentLinkedQueue<T> messageQueue = new ConcurrentLinkedQueue<>();
+    private final Inbox<T> inbox = createInbox();
 
     public Actor(String id) {
         this.id = id;
-        this.INBOXES.put(id, messageQueue);
+        this.INBOXES.put(id, inbox);
         this.startTime = System.currentTimeMillis();
         executeOnThread(this);
     }
@@ -39,12 +39,12 @@ public abstract class Actor<T> implements Runnable {
     public final void run() {
         int passesWithoutUpdate = 0;
         while (true) {
-            T nextMessage = messageQueue.poll();
+            T nextMessage = inbox.poll();
             if (nextMessage != null) {
                 process(nextMessage);
                 passesWithoutUpdate = 0;
                 if (Math.random() > 0.999) {
-                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
+//                    LOGGER.info(state() + " qq " + Duration.of(Instant.now().toEpochMilli() - startTime, ChronoUnit.MILLIS));
                 }
             } else {
                 if (passesWithoutUpdate == FINISHED) {
