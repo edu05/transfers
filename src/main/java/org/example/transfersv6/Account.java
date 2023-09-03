@@ -1,6 +1,5 @@
 package org.example.transfersv6;
 
-import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
 import static org.example.transfersv6.TransferRejectionProcessor.TRANSFER_REJECTION_PROCESSOR;
 
 public class Account extends Actor<Transfer> {
@@ -16,13 +15,12 @@ public class Account extends Actor<Transfer> {
             return;
         }
         if (amount - transfer.amount < 0) {
-            TRANSFER_REJECTION_PROCESSOR.queue(transfer);
+            send(TRANSFER_REJECTION_PROCESSOR.id, transfer);
             return;
         }
         amount -= transfer.amount;
         numOfNegativeTxs++;
-        Actor actor = ACTOR_REPOSITORY.getActor(transfer.to);
-        actor.queue(transfer);
+        send(transfer.to, transfer);
     }
 
     @Override

@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class Transfer {
 
-    public UUID from;
-    public UUID to;
-    public int amount;
+    public final UUID from;
+    public final UUID to;
+    public final int amount;
 
     public Transfer(UUID from, UUID to, int amount) {
         this.from = from;

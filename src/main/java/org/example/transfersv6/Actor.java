@@ -7,30 +7,32 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
 import static org.example.transfersv6.Utils.executeOnThread;
 import static org.example.transfersv6.Utils.freeThread;
 
 public abstract class Actor<T> implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Actor.class);
+    private static final int FINISHED = 50_000;
+    private static final Map<UUID, ConcurrentLinkedQueue> INBOXES = new ConcurrentHashMap<>();
 
     public final UUID id = UUID.randomUUID();
     private long startTime = 0;
     private final ConcurrentLinkedQueue<T> messageQueue = new ConcurrentLinkedQueue<>();
-    private static final int FINISHED = 50_000;
 
     public Actor() {
-        ACTOR_REPOSITORY.putActor(id, this);
+        INBOXES.put(id, messageQueue);
         startTime = System.currentTimeMillis();
         executeOnThread(this);
     }
 
-    public void queue(T message) {
-        messageQueue.add(message);
+    public static void send(UUID to, Transfer message) {
+        INBOXES.get(to).add(message);
     }
 
     @Override

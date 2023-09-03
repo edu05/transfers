@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.example.transfersv6.ActorRepository.ACTOR_REPOSITORY;
+import static org.example.transfersv6.Actor.send;
 import static org.example.transfersv6.Utils.executeOnThread;
 import static org.example.transfersv6.Utils.freeThread;
 
@@ -34,7 +34,7 @@ public class TransferSubmitter {
                     }
                     UUID from = getRandomId(current2);
                     UUID to = getRandomId(from, current2);
-                    ACTOR_REPOSITORY.getActor(from).queue(new Transfer(from, to, 3));
+                    send(from, new Transfer(from, to, 3));
                 }
                 LOGGER.info("finished");
             });
