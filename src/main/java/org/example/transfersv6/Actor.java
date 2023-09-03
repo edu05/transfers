@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -19,19 +18,20 @@ public abstract class Actor<T> implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Actor.class);
     private static final int FINISHED = 1_000;
-    private static final Map<UUID, ConcurrentLinkedQueue> INBOXES = new ConcurrentHashMap<>();
+    private static final Map<String, ConcurrentLinkedQueue> INBOXES = new ConcurrentHashMap<>();
 
-    public final UUID id = UUID.randomUUID();
-    private long startTime = 0;
+    public final String id;
+    private final long startTime;
     private final ConcurrentLinkedQueue<T> messageQueue = new ConcurrentLinkedQueue<>();
 
-    public Actor() {
-        INBOXES.put(id, messageQueue);
-        startTime = System.currentTimeMillis();
+    public Actor(String id) {
+        this.id = id;
+        this.INBOXES.put(id, messageQueue);
+        this.startTime = System.currentTimeMillis();
         executeOnThread(this);
     }
 
-    public static void send(UUID to, Transfer message) {
+    public static void send(String to, Transfer message) {
         INBOXES.get(to).add(message);
     }
 

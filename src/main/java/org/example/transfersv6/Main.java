@@ -4,19 +4,19 @@ package org.example.transfersv6;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.example.transfersv6.Utils.executeOnNormalThread;
+
 public class Main {
+    static { System.setProperty("logback.configurationFile", "logback.xml");}
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws InterruptedException {
-        List<UUID> accountIds = IntStream.range(0, 640).mapToObj(i -> new Account().id).collect(Collectors.toList());
+        IntStream.range(0, 640).forEach(Account::new);
 
-        TransferSubmitter transferSubmitter = new TransferSubmitter(accountIds);
-        transferSubmitter.submitTransfers(80_000_000, 20);
+        IntStream.range(0, 10).forEach(i -> executeOnNormalThread("TL" + i , new TransferListener()));
 
         LOGGER.info("lol goodbye");
         while (true) {

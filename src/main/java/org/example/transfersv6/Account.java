@@ -8,6 +8,10 @@ public class Account extends Actor<Transfer> {
     private int numOfNegativeTxs = 0;
     private int numOfPositiveTxs = 0;
 
+    public Account(int num) {
+        super("A" + num);
+    }
+
     public void process(Transfer transfer) {
         if (id.equals(transfer.to())) {
             amount += transfer.amount();
