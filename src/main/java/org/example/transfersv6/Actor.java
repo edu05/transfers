@@ -26,7 +26,7 @@ public abstract class Actor<T> implements Runnable {
 
     public Actor(String id) {
         this.id = id;
-        this.INBOXES.put(id, inbox);
+        INBOXES.put(id, inbox);
         this.startTime = System.currentTimeMillis();
         executeOnThread(this);
     }

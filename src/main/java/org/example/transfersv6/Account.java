@@ -12,6 +12,11 @@ public class Account extends Actor<Transfer> {
         super("A" + num);
     }
 
+    public void paco() {
+      var qq = "qweqwe";
+      var dd = "qwejkqwe" + qq;
+      
+    }
     public void process(Transfer transfer) {
         if (id.equals(transfer.to())) {
             amount += transfer.amount();
